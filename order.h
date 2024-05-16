@@ -8,8 +8,6 @@
 
 class Order{
     public:
-        using OrderPtr = std::shared_ptr<Order>;
-        using OrderPtrs = std::list<OrderPtr>;
         
         Order(Side side, OrderID id, OrderPrice price, OrderQuantity quantity, OrderQuantity remaining) : 
             _side(side), order_id(id), order_quantity(quantity), remaining_order_quantity(remaining)
@@ -77,5 +75,7 @@ class Order{
 
 }; 
 
+    using OrderPtr = std::shared_ptr<Order>;
+    using OrderPtrs = std::list<OrderPtr>;
 
 
