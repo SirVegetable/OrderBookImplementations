@@ -1,9 +1,18 @@
+#pragma once
+
 #include "utils.h"
+#include <memory> 
+#include <list> 
+#include <format> 
+
 
 class Order{
     public:
+        using OrderPtr = std::shared_ptr<Order>;
+        using OrderPtrs = std::list<OrderPtr>;
+        
         Order(Side side, OrderID id, OrderPrice price, OrderQuantity quantity, OrderQuantity remaining) : 
-            _side(side), order_id(id), order_quantity(quantity), remaining_order_quanity(remaining)
+            _side(side), order_id(id), order_quantity(quantity), remaining_order_quantity(remaining)
         {}
         ~Order()
         {}
@@ -35,17 +44,26 @@ class Order{
 
         OrderQuantity get_remaining_fill_quantity() const
         {
-            return remaining_order_quanity; 
+            return remaining_order_quantity; 
         }
         
         OrderQuantity get_filled_quanity()
         {
-            return order_quantity - remaining_order_quanity; 
+            return order_quantity - remaining_order_quantity; 
         }
 
-        void fill_order()
+        bool check_if_filled() const
         {
-            
+            return get_remaining_fill_quantity() == 0; 
+        }
+
+        void fill_order(OrderQuantity quanity)
+        {   
+            if(quanity > get_remaining_fill_quantity())
+            {
+                throw std::logic_error(std::format("order ({}) cannot be filled for more than its remaining quantity", get_order_id())); 
+            }
+            remaining_order_quantity -= quanity; 
         }
     
 
@@ -55,6 +73,9 @@ class Order{
         OrderQuantity order_quantity;
         OrderID order_id;
         OrderType order_type;
-        OrderQuantity remaining_order_quanity; 
+        OrderQuantity remaining_order_quantity; 
 
 }; 
+
+
+
