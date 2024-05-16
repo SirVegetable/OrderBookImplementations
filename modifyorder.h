@@ -1,6 +1,7 @@
 #pragma once
 #include "utils.h"
 #include "order.h"
+#include <memory> 
 
 class OrderModify{
 
@@ -26,7 +27,10 @@ class OrderModify{
     {
         return m_side; 
     }
-
+    OrderPtr convert_order(OrderType type) const
+    {   
+        return std::make_shared<Order>(type, get_side_to_modify(),get_id_to_modify(), get_price_to_modify, get_quantity_to_modify); 
+    }
 
     private: 
         OrderPrice m_order_price; 
