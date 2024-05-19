@@ -5,6 +5,7 @@
 #include "order.h"
 #include "trade.h"
 #include "modifyorder.h"
+#include "tradeinfo.h"
 
 class OrderBook
 {
