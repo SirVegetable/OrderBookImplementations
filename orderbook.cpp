@@ -1,5 +1,6 @@
 
 #include "orderbook.h"
+#include <algorithm> 
 
 OrderBook::OrderBook()
 {
@@ -56,7 +57,35 @@ bool OrderBook::can_complete_fill(Side side, OrderPrice price, OrderQuantity qua
         while(bids_.size(), asks_.size())
         {
             auto bid = bids_.front(); 
-            auto ask = asks_.front(); 
+            auto ask = asks_.front();
+
+            OrderQuantity quantity_to_be_filled = std::min(bid->get_remaining_fill_quantity(),ask->get_remaining_fill_quantity()); 
+
+            bid->fill_order(quantity_to_be_filled); 
+            ask->fill_order(quantity_to_be_filled);
+
+            if(bid->check_if_filled())
+            {
+                bids_.pop_front();
+                orders.erase(bid_price); 
+
+            }
+            if(ask->check_if_filled())
+            {
+                asks_.pop_front(); 
+                orders.erase(ask_price); 
+            }
+            if(bids_.empty())
+            {
+                bids.erase(bid_price); 
+            }
+            if(asks_.empty())
+            {
+                asks.erase(ask_price); 
+            }
+
+            trades.push_back(Trade{TradeInfo{bid->get_order_id(), bid->get_price(), quantity}
+                , TradeInfo{ask->get_order_id(), ask->get_price(), quantity}}); 
 
         }
 
