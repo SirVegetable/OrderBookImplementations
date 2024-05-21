@@ -90,6 +90,24 @@ bool OrderBook::can_complete_fill(Side side, OrderPrice price, OrderQuantity qua
         }
 
     }
+    if(!bids.empty())
+    {
+        auto& [_,bids_] = *bids.begin(); 
+        auto& order = bids_.front();
+        if(order->get_order_type() == OrderType::FillOrKill)
+        {
+            cancel_order(order->get_order_id()); 
+        }
+    }
+    if(!asks.empty())
+    {
+        auto& [_,asks_] = *asks.begin();
+        auto& order = asks_.front(); 
+        if(order->get_order_type() == OrderType::FillOrKill)
+        {
+            cancel_order(order->get_order_id()); 
+        }
+    }
     
 }
 
