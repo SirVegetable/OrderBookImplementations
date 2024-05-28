@@ -153,8 +153,25 @@ void OrderBook::cancel_order(OrderID order_id)
     orders_.erase(order_id);
     if(order->get_side() == Side::Sell)
     {
-        
+        auto price = order->get_price(); 
+        auto& orders = asks.at(price); 
+        orders.erase(iterator); 
+        if(orders.empty())
+        {
+            asks.erase(price); 
+        }
     }
+    else
+    {
+        auto price = order->get_price();
+        auto& orders = bids.at(price); 
+        orders.erase(iterator); 
+        if(orders.empty())
+        {
+            bids.erase(price); 
+        }
+    }
+
 }
 
 Trades OrderBook::modify_order(OrderModify order)
