@@ -1,6 +1,8 @@
 
 #include "orderbook.h"
 #include <algorithm> 
+#include <unordered_map>
+#include <iterator> 
 
 OrderBook::OrderBook()
 {
@@ -36,7 +38,7 @@ bool OrderBook::can_match(Side side, OrderPrice price)
 
 }
 
-bool OrderBook::can_complete_fill(Side side, OrderPrice price, OrderQuantity quantity)
+Trades OrderBook::match_orders()
 {
     Trades trades; 
     trades.reserve(orders.size()); 
@@ -84,8 +86,8 @@ bool OrderBook::can_complete_fill(Side side, OrderPrice price, OrderQuantity qua
                 asks.erase(ask_price); 
             }
 
-            trades.push_back(Trade{TradeInfo{bid->get_order_id(), bid->get_price(), quantity}
-                , TradeInfo{ask->get_order_id(), ask->get_price(), quantity}}); 
+            trades.push_back(Trade{TradeInfo{bid->get_order_id(), bid->get_price(), quantity_to_be_filled}
+                , TradeInfo{ask->get_order_id(), ask->get_price(), quantity_to_be_filled}}); 
 
         }
 
@@ -94,7 +96,7 @@ bool OrderBook::can_complete_fill(Side side, OrderPrice price, OrderQuantity qua
     {
         auto& [_,bids_] = *bids.begin(); 
         auto& order = bids_.front();
-        if(order->get_order_type() == OrderType::FillOrKill)
+        if(order->get_order_type() == OrderType::FillAndKill)
         {
             cancel_order(order->get_order_id()); 
         }
@@ -108,13 +110,7 @@ bool OrderBook::can_complete_fill(Side side, OrderPrice price, OrderQuantity qua
             cancel_order(order->get_order_id()); 
         }
     }
-    
-}
-
-
-Trades OrderBook::match_orders()
-{
-    
+    return trades; 
 }
 
 
@@ -123,7 +119,18 @@ Trades OrderBook::match_orders()
 
 Trades OrderBook::add_order(OrderPtr order)
 {
+    OrderPtrs::iterator order_iterator; 
+    if(orders.contains(order->get_order_id()))
+    {
+        return { }; 
+    }
+    if(order->get_side() == Side::Buy)
+    {   
+        auto& orders = bids[order->get_price()]; 
+        orders.push_back(order);
+        order_iterator = std::next(orders.begin(), orders.size()); 
 
+    }
 }
 
 void OrderBook::cancel_order(OrderID order_id)

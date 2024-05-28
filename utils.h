@@ -17,7 +17,7 @@ using OrderID = std::int64_t;
 
 enum class OrderType
 {   
-    GoodTillCancel, Market, ImmediateOrCancel, FillOrKill
+    GoodTillCancel, Market, ImmediateOrCancel, FillOrKill, FillAndKill
 
 }; 
 
