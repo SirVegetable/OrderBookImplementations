@@ -29,7 +29,7 @@ class OrderBook
         }; 
         std::map<OrderPrice,OrderPtrs, std::greater<OrderPrice>> bids;
         std::map<OrderPrice,OrderPtrs, std::less<OrderPrice>> asks;
-        std::unordered_map<OrderID,OrderEntry> orders;
+        std::unordered_map<OrderID,OrderEntry> orders_;
         bool can_match(Side side, OrderPrice price); 
         bool can_complete_fill(Side side, OrderPrice price, OrderQuantity quantity);
         Trades match_orders(); 

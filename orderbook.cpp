@@ -41,7 +41,7 @@ bool OrderBook::can_match(Side side, OrderPrice price)
 Trades OrderBook::match_orders()
 {
     Trades trades; 
-    trades.reserve(orders.size()); 
+    trades.reserve(orders_.size()); 
     
     while(1)
     {
@@ -69,13 +69,13 @@ Trades OrderBook::match_orders()
             if(bid->check_if_filled())
             {
                 bids_.pop_front();
-                orders.erase(bid_price); 
+                orders_.erase(bid_price); 
 
             }
             if(ask->check_if_filled())
             {
                 asks_.pop_front(); 
-                orders.erase(ask_price); 
+                orders_.erase(ask_price); 
             }
             if(bids_.empty())
             {
@@ -120,7 +120,7 @@ Trades OrderBook::match_orders()
 Trades OrderBook::add_order(OrderPtr order)
 {
     OrderPtrs::iterator order_iterator; 
-    if(orders.contains(order->get_order_id()))
+    if(orders_.contains(order->get_order_id()))
     {
         return { }; 
     }
@@ -128,14 +128,33 @@ Trades OrderBook::add_order(OrderPtr order)
     {   
         auto& orders = bids[order->get_price()]; 
         orders.push_back(order);
-        order_iterator = std::next(orders.begin(), orders.size()); 
+        order_iterator = std::next(orders.begin(), orders.size()-1); 
+
 
     }
+    else
+    {
+        auto& orders = asks[order->get_price()];
+        orders.push_back(order); 
+        order_iterator = std::next(orders.begin(), orders.size() -1); 
+
+    }
+    orders_.insert({order->get_order_id(),OrderEntry{ order, order_iterator}}); 
+    return match_orders(); 
 }
 
 void OrderBook::cancel_order(OrderID order_id)
 {
-
+    if(!orders_.contains(order_id))
+    {
+        return; 
+    }
+    const auto& [order, iterator] = orders_.at(order_id);
+    orders_.erase(order_id);
+    if(order->get_side() == Side::Sell)
+    {
+        
+    }
 }
 
 Trades OrderBook::modify_order(OrderModify order)
