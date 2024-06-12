@@ -1,5 +1,9 @@
 
 #include "orderbook.h"
+#include "booklevel.h"
+#include "order.h"
+#include "orderbookleveldepth.h"
+#include "utils.h"
 #include <algorithm> 
 #include <unordered_map>
 #include <iterator> 
@@ -33,10 +37,11 @@ bool OrderBook::can_match(Side side, OrderPrice price)
             return false; 
         }
         const auto& [best_bid, _] = *asks.begin(); 
-        return best_bid;
+        return price <= best_bid;
     }
 
 }
+
 
 Trades OrderBook::match_orders()
 {
@@ -115,8 +120,6 @@ Trades OrderBook::match_orders()
 
 
 
-
-
 Trades OrderBook::add_order(OrderPtr order)
 {
     OrderPtrs::iterator order_iterator; 
@@ -173,8 +176,22 @@ void OrderBook::cancel_order(OrderID order_id)
     }
 
 }
+BookDepth OrderBook::get_order_information() const 
+{
+    BookDepth::Book_Level_Depth bid_infos, ask_infos; 
+    bid_infos.reserve(orders_.size()); 
+    ask_infos.reserve(orders_.size()); 
+
+    auto create_book_level_info = [](OrderPrice price, const OrderPtrs& orders)
+    {
+        // return LevelDepth{price, std::accumulate(orders.begin(), orders.end(), (OrderQuantity)0,
+        //     []())}
+    };
+}
 
 Trades OrderBook::modify_order(OrderModify order)
 {
-
+    
+    
 }
+

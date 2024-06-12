@@ -6,6 +6,7 @@
 #include "trade.h"
 #include "modifyorder.h"
 #include "tradeinfo.h"
+#include "orderbookleveldepth.h"
 
 class OrderBook
 {
@@ -19,7 +20,8 @@ class OrderBook
 
         Trades add_order(OrderPtr order);
         Trades modify_order(OrderModify order);
-        void cancel_order(OrderID order_id);  
+        void cancel_order(OrderID order_id); 
+        BookDepth get_order_information() const ; 
 
     private:
         struct OrderEntry
