@@ -29,7 +29,7 @@ class OrderModify{
     }
     OrderPtr convert_order(OrderType type) const
     {   
-        return std::make_shared<Order>(type, get_side_to_modify(),get_id_to_modify(), get_price_to_modify, get_quantity_to_modify); 
+        return std::make_shared<Order>(type, get_side_to_modify(),get_id_to_modify(), get_price_to_modify(), get_quantity_to_modify()); 
     }
 
     private: 

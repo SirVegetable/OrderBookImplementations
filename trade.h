@@ -5,7 +5,7 @@
 class Trade
 {
     public: 
-        Trade(const TradeInfo& bidTrade, const TradeInfo& askTrade): bid_trade(bidTrade), ask_trade(ask_trade)
+        Trade(const TradeInfo& bidTrade, const TradeInfo& askTrade): bid_trade(bidTrade), ask_trade(askTrade)
         {}
 
         const TradeInfo& get_bid_trade() const
@@ -21,4 +21,4 @@ class Trade
         TradeInfo ask_trade; 
 
 };
-using Trades = std::vector<Trades>; 
+using Trades = std::vector<Trade>; 
