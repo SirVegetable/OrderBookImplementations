@@ -9,8 +9,8 @@
 class Order{
     public:
         
-        Order(Side side, OrderID id, OrderPrice price, OrderQuantity quantity, OrderQuantity remaining) : 
-            _side(side), order_id(id), order_quantity(quantity), remaining_order_quantity(remaining)
+        Order(OrderType _ordertype, Side side, OrderID id, OrderPrice price, OrderQuantity quantity) : 
+            order_type(_ordertype),_side(side), order_id(id),order_price(price), order_quantity(quantity), remaining_order_quantity(quantity)
         {}
         ~Order()
         {}
@@ -45,7 +45,7 @@ class Order{
             return remaining_order_quantity; 
         }
         
-        OrderQuantity get_filled_quanity()
+        OrderQuantity get_filled_quantity()
         {
             return order_quantity - remaining_order_quantity; 
         }

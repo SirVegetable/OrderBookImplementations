@@ -27,6 +27,8 @@ class OrderModify{
     {
         return m_side; 
     }
+
+    /* need to chnange this function to match the order constructor*/
     OrderPtr convert_order(OrderType type) const
     {   
         return std::make_shared<Order>(type, get_side_to_modify(),get_id_to_modify(), get_price_to_modify(), get_quantity_to_modify()); 
