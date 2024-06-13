@@ -6,7 +6,8 @@
 #include "utils.h"
 #include <algorithm> 
 #include <unordered_map>
-#include <iterator> 
+#include <iterator>
+#include <numeric> 
 
 OrderBook::OrderBook()
 {
@@ -184,9 +185,18 @@ BookDepth OrderBook::get_order_information() const
 
     auto create_book_level_info = [](OrderPrice price, const OrderPtrs& orders)
     {
-        // return LevelDepth{price, std::accumulate(orders.begin(), orders.end(), (OrderQuantity)0,
-        //     []())}
+        return LevelDepth{price,std::accumulate(orders.begin(), orders.end(), OrderQuantity(0),
+            [](OrderQuantity total, const OrderPtr& order){return total + order->get_remaining_fill_quantity(); } )}; 
     };
+    for(const auto& [price, orders] : bids)
+    {
+        bid_infos.push_back(create_book_level_info(price, orders)); 
+    }
+    for(const auto& [price, orders]: asks)
+    {
+        ask_infos.push_back(create_book_level_info(price, orders)); 
+    }
+    return BookDepth{bid_infos, ask_infos}; 
 }
 
 Trades OrderBook::modify_order(OrderModify order)
