@@ -4,6 +4,7 @@
 #include <memory> 
 #include <list> 
 #include <format> 
+#include "market_order_init_p.h"
 
 
 class Order{
@@ -11,6 +12,9 @@ class Order{
         
         Order(OrderType _ordertype, Side side, OrderID id, OrderPrice price, OrderQuantity quantity) : 
             order_type(_ordertype),_side(side), order_id(id),order_price(price), order_quantity(quantity), remaining_order_quantity(quantity)
+        {}
+
+        Order(OrderID id, Side side, OrderQuantity quantity) : Order(OrderType::Market, side, id, Constant::mOrder_invalid_price, quantity)
         {}
         ~Order()
         {}
